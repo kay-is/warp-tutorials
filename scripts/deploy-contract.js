@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "fs"
 import { WarpFactory, LoggerFactory } from "warp-contracts"
 import { DeployPlugin } from "warp-contracts-plugin-deploy"
+import Arweave from "arweave"
 
 LoggerFactory.INST.logLevel("error")
 

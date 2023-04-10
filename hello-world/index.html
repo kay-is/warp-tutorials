@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8" />
+<title>SmartWeave Hello World</title>
+
+<h1>SmartWeave Hello World</h1>
+
+<button id="connectButton">Load Contract State</button>
+<pre id="contractStatePre"></pre>
+
+<h2>ArLocal Config</h2>
+<p>Protocol</p>
+<input id="protocolInput" value="http" />
+<p>Hostname</p>
+<input id="hostInput" value="localhost" />
+<p>Port</p>
+<input id="portInput" value="8888" />
+
+<script type="module">
+  import { WarpFactory } from "https://unpkg.com/warp-contracts/bundles/web.bundle.min.js"
+
+  const connectButton = document.getElementById("connectButton")
+  connectButton.addEventListener("click", async () => {
+    connectButton.disabled = true
+
+    const arlocalConfig = {
+      protocol: document.getElementById("protocolInput").value,
+      host: document.getElementById("hostInput").value,
+      port: document.getElementById("portInput").value,
+    }
+
+    const contractId = await fetch("contract-id").then((r) => r.text())
+
+    const contract = await WarpFactory.forLocal(
+      arlocalConfig.port,
+      new Arweave(arlocalConfig)
+    ).contract(contractId)
+
+    try {
+      const { cachedValue } = await contract.readState()
+      const contractStatePre = document.getElementById("contractStatePre")
+      contractStatePre.innerText = JSON.stringify(cachedValue.state, null, 2)
+    } catch (e) {
+      console.error(e)
+    }
+
+    connectButton.disabled = false
+  })
+</script>

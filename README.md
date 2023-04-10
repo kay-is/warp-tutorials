@@ -21,9 +21,9 @@ Install dependencies:
 
     $ npm i
 
-Run in separate terminal:
+Run webserver and ArLocal in separate terminal:
 
-    $ npm run arlocal
+    $ npm start
 
 Initialize wallets:
 
@@ -42,6 +42,8 @@ Deploy contract:
 Get contract state:
 
     $ npm run call user1 hello-world
+
+You can find a web app at <http://localhost:8080/hello-world>.
 
 ## Ardit Contract
 
