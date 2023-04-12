@@ -11,26 +11,22 @@
 <script type="module">
   import { WarpFactory } from "warp-contracts"
 
-  const arlocalConfig = {
-    protocol: window.location.protocol.slice(0, 5),
+  // Codespaces forwards ports as sub-domain with default SSL port.
+  const arweaveClient = new Arweave({
+    protocol: "https",
     host: window.location.host.replace("8080", "8888"),
-    port:
-      window.location.host === "localhost"
-        ? 8888
-        : window.location.protocol == "https:"
-        ? 443
-        : 80,
-  }
+    port: 443,
+  })
 
   document
     .getElementById("connectButton")
     .addEventListener("click", async () => {
       const contractId = await fetch("contract-id").then((r) => r.text())
 
-      const contract = await WarpFactory.forLocal(
-        arlocalConfig.port,
-        new Arweave(arlocalConfig)
-      ).contract(contractId)
+      // forLocal ignores Arweave port and needs it explicitly
+      const contract = await WarpFactory.forLocal(443, arweaveClient).contract(
+        contractId
+      )
 
       const { cachedValue } = await contract.readState()
       const contractStatePre = document.getElementById("contractStatePre")
