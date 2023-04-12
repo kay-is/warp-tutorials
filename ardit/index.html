@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8" />
+<title>SmartWeave Ardit</title>
+
+<h1>SmartWeave Ardit</h1>
+
+<input id="messageInput" value="Hello!" />
+<button id="postMessageButton">Post Message</button>
+
+<h2>Messages</h2>
+<ol id="messageList"></ol>
+
+<pre id="errorPre"></pre>
+
+<script type="module">
+  import { WarpFactory } from "warp-contracts"
+  import {
+    emvSignature,
+    EvmSignatureVerificationWebPlugin,
+  } from "warp-contracts-plugin-signature"
+
+  let contract
+  const getContract = async () => {
+    if (contract) return contract
+
+    const contractId = await fetch("contract-id").then((r) => r.text())
+    contract = await WarpFactory.forTestnet()
+      .use(new EvmSignatureVerificationWebPlugin())
+      .contract(contractId)
+      .connect({ signer: emvSignature, type: "ethereum" })
+
+    return contract
+  }
+
+  const postMessage = async () => {
+    const contract = await getContract()
+
+    await contract.writeInteraction({
+      function: "postMessage",
+      content: document.getElementById("messageInput").value,
+    })
+
+    await updateMessageList()
+  }
+
+  const upvoteMessage = async (id) => {
+    const contract = await getContract()
+
+    try {
+      await contract.writeInteraction(
+        { function: "upvoteMessage", id },
+        { strict: true }
+      )
+    } catch (e) {
+      document.getElementById("errorPre").innerText = e.message
+    }
+
+    await updateMessageList()
+  }
+
+  const downvoteMessage = async (id) => {
+    const contract = await getContract()
+    try {
+      await contract.writeInteraction(
+        { function: "downvoteMessage", id },
+        { strict: true }
+      )
+    } catch (e) {
+      document.getElementById("errorPre").innerText = e.message
+    }
+    await updateMessageList()
+  }
+  const updateMessageList = async () => {
+    const contract = await getContract()
+    const { cachedValue } = await contract.readState()
+
+    const messageList = document.getElementById("messageList")
+    messageList.innerHTML = ""
+    cachedValue.state.messages
+      .sort((a, b) => b.votes.status - a.votes.status)
+      .forEach((message) => {
+        const li = document.createElement("li")
+        li.innerText = message.content + " (" + message.votes.status + ") "
+
+        const upvoteButton = document.createElement("button")
+        upvoteButton.innerText = "+"
+        upvoteButton.addEventListener("click", () => upvoteMessage(message.id))
+        li.appendChild(upvoteButton)
+
+        const downvoteButton = document.createElement("button")
+        downvoteButton.innerText = "-"
+        downvoteButton.addEventListener("click", () =>
+          downvoteMessage(message.id)
+        )
+        li.appendChild(downvoteButton)
+
+        messageList.appendChild(li)
+      })
+  }
+
+  document
+    .getElementById("postMessageButton")
+    .addEventListener("click", postMessage)
+
+  await updateMessageList()
+</script>
