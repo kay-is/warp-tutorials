@@ -11,7 +11,7 @@ const inputContentOrId = process.argv[5]
 const wallet = JSON.parse(readFileSync(`wallets/${walletName}.json`, "utf-8"))
 const contractId = readFileSync(contractName + "/contract-id", "utf-8")
 
-const contract = WarpFactory.forLocal(8888)
+const contract = WarpFactory.forTestnet()
   .contract(contractId)
   .connect(wallet.jwk)
 

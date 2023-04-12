@@ -3,7 +3,7 @@ import { WarpFactory, LoggerFactory } from "warp-contracts"
 
 LoggerFactory.INST.logLevel("error")
 
-const warp = WarpFactory.forLocal(8888)
+const warp = WarpFactory.forTestnet()
 const wallet = await warp.generateWallet()
 
 if (!existsSync("wallets")) mkdirSync("wallets")

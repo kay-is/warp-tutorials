@@ -29,10 +29,6 @@ Install dependencies:
 
     $ npm start <CONTRACT_NAME>
 
-- starts ArLocal on port `8888`
 - creates 3 wallets (admin, user1, and user2)
-- deploys contract on ArLocal with admin wallet
+- deploys contract on Arweave Mainnet (with Testnet tags) with admin wallet
 - starts Vite on port `8080` to serve a web app that uses the contract
-
-> Note: Make sure you set the visibility of port `8888` to public in Codespace.
-> ![](public-port.png)
