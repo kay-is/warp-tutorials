@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Create Wallet",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/scripts/create-wallet.js",
+      "args": ["admin"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Deploy Contract",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/scripts/deploy-contract.js",
+      "args": ["admin", "hello-world"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
