@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs"
+import { existsSync, readFileSync, writeFileSync } from "fs"
 import { WarpFactory, LoggerFactory } from "warp-contracts"
 import { ArweaveSigner, DeployPlugin } from "warp-contracts-plugin-deploy"
 
@@ -6,6 +6,11 @@ LoggerFactory.INST.logLevel("error")
 
 const walletName = process.argv[2]
 const contractName = process.argv[3]
+
+if (existsSync(contractName + "/contract-id")) {
+  console.error(`Contract "${contractName}" already deployed. Skipping!`)
+  process.exit(0)
+}
 
 const src = readFileSync(contractName + "/contract.js", "utf-8")
 const initState = readFileSync(contractName + "/initial-state.json", "utf-8")
