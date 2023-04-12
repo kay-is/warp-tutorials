@@ -1,5 +1,7 @@
 # Warp Contract Tutorials
 
+Examples run on GitHub Codespaces.
+
 SmartWeave contracts based on [Warp Academy tutorials](https://academy.warp.cc/tutorials/ardit/introduction/intro).
 
 - [Hello World](hello-world/contract.js)
@@ -21,50 +23,16 @@ Install dependencies:
 
     $ npm i
 
-Run webserver and ArLocal in separate terminal:
+## Scripts
 
-    $ npm start
+### start
 
-Initialize wallets:
+    $ npm start <CONTRACT_NAME>
 
-    $ npm run create-wallet admin
-    $ npm run create-wallet user1
-    $ npm run create-wallet user2
+- starts ArLocal on port `8888`
+- creates 3 wallets (admin, user1, and user2)
+- deploys contract on ArLocal with admin wallet
+- starts Vite on port `8080` to serve a web app that uses the contract
 
-## Hello World Contract
-
-Minimal contract that only returns its initial state.
-
-Deploy contract:
-
-    $ npm run deploy admin hello-world
-
-Get contract state:
-
-    $ npm run call user1 hello-world
-
-You can find a web app at <http://localhost:8080/hello-world>.
-
-## Ardit Contract
-
-Contract that lets multiple users post messages and vote for them.
-
-Deploy contract:
-
-    $ npm run deploy admin ardit
-
-Create Message:
-
-    $ npm run call admin ardit postMessage "Hello, Ardit!"
-
-Upvote Message:
-
-    $ npm run call user1 ardit upvoteMessage 1
-
-Downvote Message:
-
-    $ npm run call user2 ardit downvoteMessage 1
-
-Read Message:
-
-    $ npm run call admin ardit readMessage 1
+> Note: Make sure you set the visibility of port `8888` to public in Codespace.
+> ![](public-port.png)
